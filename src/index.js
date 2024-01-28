@@ -1,15 +1,30 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+const redirect = {
+	"tiktok.com": "tiktxk.com",
+	"www.tiktok.com": "tiktxk.com",
+	"instagram.com": "ddinstagram.com",
+	"www.instagram.com": "ddinstagram.com",
+	"twitter.com": "vxtwitter.com",
+	"www.twitter.com": "vxtwitter.com",
+	"x.com": "fixvx.com",
+	"www.x.com": "fixvx.com",
+}
 
 export default {
-	async fetch(request, env, ctx) {
-		return new Response('Hello World!');
+	async fetch(request) {
+		try {
+			const url = new URL(request.url)
+			const path = url.pathname.substring(1)
+			const newURL = new URL(path.startsWith("http") ? path : "https://" + path)
+			const replacement = redirect[newURL.host]
+			if (replacement) {
+				newURL.host = replacement
+			} else {
+				return new Response("Not found", { status: 404 })
+			}
+			return Response.redirect(newURL.toString(), 307)
+		} catch {
+			console.warn(`Invalid URL: ${request.url}`)
+			return new Response("Not found", { status: 404 })
+		}
 	},
-};
+}
