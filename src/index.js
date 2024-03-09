@@ -24,8 +24,14 @@ export default {
         <html>
           <head>
             <title>Video embed</title>
+            <meta property="og:site_name" content="Video embed">
+            <meta property="og:type" content="video.other">
+            <meta property="og:title" content="Video embed">
             <meta property="og:video" content="${newAsString}">
             <meta property="og:video:type" content="video/mp4">
+            <meta property="og:video:secure_url" content="${newAsString}">
+            <meta property="og:video:height" content="1080">
+            <meta property="og:video:width" content="1920">
           </head>
           <body>
             <a href="${newAsString}">Click here to go to your destination.</a>
