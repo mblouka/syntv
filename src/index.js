@@ -15,6 +15,31 @@ export default {
       const url = new URL(request.url)
       const path = url.pathname.substring(1)
       const newURL = new URL(path.startsWith("http") ? path : "https://" + path)
+
+      // MP4 video embed.
+      const newAsString = newURL.toString()
+      if (newAsString.endsWith(".mp4")) {
+        return new Response(
+          `
+        <html>
+          <head>
+            <title>Video embed</title>
+            <meta property="og:video" content="${newAsString}">
+            <meta property="og:video:type" content="video/mp4">
+          </head>
+          <body>
+            <a href="${newAsString}">Click here to go to your destination.</a>
+          </body>
+        </html>
+        `,
+          {
+            headers: {
+              "Content-Type": "text/html",
+            },
+          }
+        )
+      }
+
       const replacement = redirect[newURL.host]
       if (replacement) {
         newURL.host = replacement
